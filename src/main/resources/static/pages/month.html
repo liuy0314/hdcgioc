@@ -1,0 +1,247 @@
+<!--
+ * @Description: 
+ * @Version: 2.0
+ * @Autor: Seven
+ * @Date: 2020-09-10 10:24:45
+ * @LastEditors: Seven
+ * @LastEditTime: 2020-10-14 22:30:11
+-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="../css/bootcss/bootstrap.min.css">
+    <link rel="stylesheet" href="../css/style.css">
+    <script src="../js/jquery.min.js"></script>
+    <script src="../js/bootstrap.min.js"></script>
+    <script src="../js/echarts.min.js"></script>
+</head>
+<body>
+      <div>
+        <h2 class="cont-title">
+            不同类罪的羁押审判周期统计对比
+            <!-- <a class="cont-next cont-pre" href="./province.html">
+                上一页
+            </a>
+            <a class="cont-next" href="../home.html">
+                回到首页
+            </a> -->
+        </h2>
+         <div style="display: flex;">
+        <div class="age-chart-width">
+            <h2 class="cont-title">
+                侵犯公民人身权利、民主权利罪羁押审判周期
+            </h2>
+            <div id="echart2" style="width: 100%;height: 300px;"></div>
+        </div>
+        <div class="age-chart-width">
+            <h2 class="cont-title">
+                侵犯财产罪羁押审判周期
+            </h2>
+            <div id="echart3" style="width: 100%;height: 300px;"></div>
+        </div>
+        <div class="age-chart-width">
+            <h2 class="cont-title">
+                军人违反职责罪羁押审判周期
+            </h2>
+            <div id="echart4" style="width: 100%;height: 300px;"></div>
+        </div>
+         </div>
+
+         <div style="display: flex;">
+        <div class="age-chart-width">
+            <h2 class="cont-title">
+                危害公共安全罪羁押审判周期
+            </h2>
+            <div id="echart5" style="width: 100%;height: 300px;"></div>
+        </div>
+        <div class="age-chart-width">
+            <h2 class="cont-title">
+                危害国家安全罪羁押审判周期
+            </h2>
+            <div id="echart6" style="width: 100%;height: 300px;"></div>
+        </div>
+        <div class="age-chart-width">
+            <h2 class="cont-title">
+                危害国防利益罪羁押审判周期
+            </h2>
+            <div id="echart7" style="width: 100%;height: 300px;"></div>
+        </div>
+         </div>
+         <div style="display: flex;">
+        <div class="age-chart-width">
+            <h2 class="cont-title">
+                妨害社会管理秩序罪羁押审判周期
+            </h2>
+            <div id="echart8" style="width: 100%;height: 300px;"></div>
+        </div>
+        <div class="age-chart-width">
+            <h2 class="cont-title">
+                渎职罪羁押审判周期
+            </h2>
+            <div id="echart9" style="width: 100%;height: 300px;"></div>
+        </div>
+        <div class="age-chart-width">
+            <h2 class="cont-title">
+                破坏社会主义市场经济秩序罪羁押审判周期
+            </h2>
+            <div id="echart10" style="width: 100%;height: 300px;"></div>
+        </div>
+         </div>
+
+        <div class="age-chart-width">
+            <h2 class="cont-title">
+                贪污贿赂罪羁押审判周期
+            </h2>
+            <div id="echart11" style="width: 100%;height: 300px;"></div>
+        </div>
+    
+    
+      
+</body>
+<script>
+     $(function(){
+        //类罪及其判决数量
+        loadPersonalAge();
+    })
+
+    function loadPersonalAge(){
+        $.ajax({
+                url:"../data/decision_inter_month_divide.json",
+                type: "GET", //请求方式为get
+  			    dataType: "json", //返回数据格式为json
+  		        success: function(data) { //请求成功完成后要执行的方法 
+  				    //each循环 使用$.each方法遍历返回的数据date
+                    // loadCategroyFaultChart(data);
+                    data.RECORDS.forEach((element,index) => {
+                        if (!!element.penalty_class){
+                            loadPersonalFault(element,index+1);
+                        }
+                    });
+  		    	}
+            })
+    }
+    function loadPersonalFault(element,index){
+                var yList = [];
+    //             "month_0_3": "3235",
+    //   "month_3_6": "8191",
+    //   "month_6_12": "12157",
+    //   "month_12_18": "6077",
+    //   "month_18_24": "2089",
+    //   "month_24_30": "846",
+    //   "month_30_36": "345",
+    //   "month_36_max": "420",
+                var xList = ["0-3","3-6","6-12","12-18","18-24","24-30","30-36",">36"];
+                for (var key in element){
+                    if (key != "unkown" && key != "penalty_class"){
+                        yList.push(element[key]);
+                    }
+                }
+                 
+                console.log("xList",xList,"yList",yList);
+                var option = {
+                tooltip: {
+                trigger: 'axis',
+                axisPointer: {
+                    type: 'shadow'
+                },
+                // formatter: '{b0}<br />{a0}: {c0}亿元<br />{a1}: {c1}%'
+                },
+                grid: {
+                top: '10%',
+                right: '3%',
+                left: '13%',
+                bottom: '15%'
+                },
+                xAxis: [{
+                type: 'category',
+                name: '',
+                nameTextStyle: {
+                    color: "#C4E0F5"
+                },
+                data: xList,
+                axisLine: {
+                    lineStyle: {
+                    color: 'rgba(255,255,255,0.12)'
+                    }
+                },
+                axisLabel: {
+                    margin: 10,
+                    interval:0,
+                    color: '#e2e9ff',
+                    textStyle: {
+                    fontSize: 11
+                    },
+                },
+                }],
+                yAxis: [
+                {
+                    type: 'value',
+                    name: '（个）',
+                    nameTextStyle: {
+                    color: "#C4E0F5"
+                    },
+                    axisLabel: {
+                    formatter: '{value}',
+                    color: '#e2e9ff',
+                    },
+                    axisLine: {
+                    show: true,
+                    lineStyle: {
+                        color: 'rgba(196,224,245,0.25)'
+                    }
+                    },
+                    splitLine: {
+                    show: true,
+                    lineStyle: {
+                        type: 'dashed',
+                        color: 'rgba(196,224,245,0.45)'
+                    }
+                    }
+                }],
+                series: [{
+                type: 'bar',
+                data: yList,
+                name:"数量",
+                barWidth: '16px',
+                itemStyle: {
+                    normal: {
+                    color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
+                        offset: 0,
+                        color: '#4DDEFE' // 0% 处的颜色
+                    }, {
+                        offset: 0.5,
+                        color: '#57FBFA' // 50% 处的颜色
+                    }, {
+                        offset: 1,
+                        color: '#3D8BFF' // 100% 处的颜色
+                    }], false),
+                    barBorderRadius: [2, 2, 0.1, 0.1],
+                    shadowColor: 'rgba(0,0,0,0)',
+                    shadowBlur: 4,
+                    label: {
+                        show: true, //开启显示
+                        position: 'top', //在上方显示
+                        textStyle: { //数值样式
+                        color: '#4DDEFE',
+                        fontSize: 10
+                        }
+                    },
+                    }
+                },
+
+                }]
+            };
+                var mychart1 = echarts.init(document.getElementById("echart"+index));
+                mychart1.clear();
+                mychart1.setOption(option);
+                window.onresize = mychart1.resize();
+       
+}   
+
+
+
+</script>
+</html>

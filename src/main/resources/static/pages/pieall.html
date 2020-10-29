@@ -1,0 +1,306 @@
+<!--
+ * @Description: 
+ * @Version: 2.0
+ * @Autor: Seven
+ * @Date: 2020-09-10 10:24:45
+ * @LastEditors: Seven
+ * @LastEditTime: 2020-09-18 14:39:11
+-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="../css/bootcss/bootstrap.min.css">
+    <link rel="stylesheet" href="../css/style.css">
+    <script src="../js/jquery.min.js"></script>
+    <script src="../js/bootstrap.min.js"></script>
+    <script src="../js/echarts.min.js"></script>
+</head>
+<body>
+    <div style="display: flex;"> 
+      <div>
+        <h2 class="cont-title">
+            各类刑罚的数量分布
+        </h2>
+        <div id="echart1" style="    width: 400px;height: 233px;"></div>
+      </div>
+      
+
+      <div style="margin-left: 48px;">
+        <h2 class="cont-title">
+            类罪及其判决数量分布 
+        </h2>
+        <div id="echart2" style="    width: 560px;height: 263px;"></div>
+      </div>
+    </div>
+    <div style="display: flex;"> 
+      <div>
+        <h2 class="cont-title">
+            各类刑罚的年龄分布
+        </h2>
+        <div id="echart3" style="    width: 400px;height: 263px;"></div>
+      </div>
+
+      <div style="margin-left: 48px;">
+        <h2 class="cont-title">
+            各类刑罚的文化程度分布
+        </h2>
+        <div id="echart4" style="    width: 560px;height: 273px;"></div>
+      </div>
+      </div>
+</body>
+<script>
+    $(function(){
+        //类罪及其判决数量
+        loadCateNumb();
+        loadCategroyFault();
+        loadAllage();
+        loadAlledu();
+        
+    })
+    function loadAllage(){
+        $.ajax({
+                url:"../data/all_age.json",
+                type: "GET", //请求方式为get
+  			    dataType: "json", //返回数据格式为json
+  		        success: function(data) { //请求成功完成后要执行的方法 
+  				            //each循环 使用$.each方法遍历返回的数据date
+                    var totals = 0;
+                    var names = ["不满14周岁","14-18周岁","18-30周岁","30-40周岁",
+                                "40-50周岁","50-60周岁","60-70周岁","70-75周岁","超过75周岁"];
+                    var values = [];
+                    var i = 0;
+                    data.records.forEach(element => {
+                        for (var key in element){
+                           if (key != "unkonwn"){
+                               totals += Number(element[key]);
+                               values.push({
+                                     name:names[i],
+                                    value:Number(element[key])
+                                })
+                                i++;
+                           }
+                       }
+                     }); 
+                     values.sort(function(a, b){return b.value - a.value}); 
+                     names = [];
+                    values.forEach(element => {
+                        names.push(element.name);
+                    });
+                    gettsbmOption(totals,names,values,3);
+  		    	}
+            })
+    }
+    function loadAlledu(){
+        $.ajax({
+                url:"../data/all_edu.json",
+                type: "GET", //请求方式为get
+  			    dataType: "json", //返回数据格式为json
+  		        success: function(data) { //请求成功完成后要执行的方法 
+  				            //each循环 使用$.each方法遍历返回的数据date
+                    var totals = 0;
+                    var names = ["文盲","半文盲","小学","初中","高中","高职","中专","大专","本科","硕士","博士","其他"];
+                    var values = [];
+                    var i = 0;
+                    data.records.forEach(element => {
+                        names.forEach(ele => {
+                            if (ele == element.person_edu_level){
+                              totals += Number(element.number);
+                               values.push({
+                                    name:ele,
+                                    value:Number(element.number)
+                                })
+                            }
+                        });
+                     });  
+                     values.sort(function(a, b){return b.value - a.value}); 
+                     names = [];
+                    values.forEach(element => {
+                        names.push(element.name);
+                    });
+                    gettsbmOption(totals,names,values,4);
+  		    	}
+            })
+    }
+    function loadCateNumb(){
+        $.ajax({
+                url:"../data/penalty_class_num.json",
+                type: "GET", //请求方式为get
+  			    dataType: "json", //返回数据格式为json
+  		        success: function(data) { //请求成功完成后要执行的方法 
+  				            //each循环 使用$.each方法遍历返回的数据date
+                    var totals = 0;
+                    var names = [];
+                    var values = [];
+                    data.forEach(element => {
+                         totals += Number(element.number);
+                         values.push({
+                            name:element.penalty_class,
+                            value:Number(element.number)
+                         })
+                     }); 
+                    values.sort(function(a, b){return b.value - a.value}); 
+                    values.forEach(element => {
+                        names.push(element.name);
+                    });  
+                    gettsbmOption(totals,names,values,2);
+  		    	}
+            })
+    }
+   
+    function loadCategroyFault(){
+        $.ajax({
+                url:"../data/penalty_prison_type_num_0917.json",
+                type: "GET", //请求方式为get
+  			    dataType: "json", //返回数据格式为json
+  		        success: function(data) { //请求成功完成后要执行的方法 
+  				            //each循环 使用$.each方法遍历返回的数据date
+                    var totals = 0;
+                    var names = [];
+                    var values = [];
+                    data.forEach(element => {
+                         totals += Number(element.number);
+                         values.push({
+                            name:element.name,
+                            value:Number(element.number)
+                         })
+                     }); 
+                    values.sort(function(a, b){return b.value - a.value}); 
+                    values.forEach(element => {
+                        names.push(element.name);
+                    });  
+                    gettsbmOption(totals,names,values,1);
+  		    	}
+            })
+    }
+    
+
+
+
+
+   function gettsbmOption(totals,names,values,index) {
+        // 总和
+        debugger;
+        var total = {
+            value: totals,
+            name: '案件数量'
+        };
+        var originalData = values;
+        var myChartIndustryOption = echarts.init(document.getElementById('echart'+index));
+        myChartIndustryOption.clear();
+        var tsbmOption = {
+            tooltip: {
+                trigger: 'item',
+                formatter: '{b}: {d}%'
+            },
+            title: [{
+                text: total.value,
+                left: '20%',
+                top: '40%',
+                textAlign: 'center',
+                textBaseline: 'middle',
+                textStyle: {
+                    color: '#FFFFFF',
+                    fontWeight: 'normal',
+                    fontSize: 20
+                }
+            }, {
+                text: total.name,
+                left: '20%',
+                top: '50%',
+                textAlign: 'center',
+                textBaseline: 'middle',
+                textStyle: {
+                    color: '#C4E0F5',
+                    fontWeight: 'normal',
+                    fontSize: 14
+                }
+            }],
+            color: ['#FFCB00', '#4988e6', '#c4e0f5', '#4be599', '#05c3fa','#6bcd09'],
+            legend: {
+                type: 'scroll',
+                icon: 'circle',
+                itemWidth: 10,
+                itemHeight: 10,
+                x: 'left',
+                y: 'center',
+                left: '50%',
+                orient: 'vertical',
+                data: names,
+                textStyle: {
+                    color: ' #C4E0F5',
+                    fontSize: 12
+                },
+                tooltip: {
+                    show: true,
+                },
+                formatter: function (name) {
+                    var oa = originalData;
+                    var num = totals;
+                    for (var i = 0; i < oa.length; i++) {
+                        if (name == oa[i].name) {
+                        //    if(name.length > 5)
+                        //      name = name.substr(0, 9) + '..';
+                            var number = 0;
+                            if (Math.round((oa[i].value / num * 10000))/100 != 0){
+                                number = Math.round((oa[i].value / num * 10000))/100
+                            }else if (Math.round((oa[i].value / num * 100000))/1000 != 0){
+                                number = Math.round((oa[i].value / num * 100000))/1000
+                            }else if (Math.round((oa[i].value / num * 1000000))/10000 != 0){
+                                number = Math.round((oa[i].value / num * 1000000))/10000 
+                            }else if (Math.round((oa[i].value / num * 10000000))/100000 != 0){
+                                number = Math.round((oa[i].value / num * 10000000))/100000
+                            }
+                           return name + ' ' +oa[i].value+ ' ' + number + '%';
+                        }
+                    }
+                }
+            },
+            series: [{
+                hoverAnimation: false, //设置饼图默认的展开样式
+                center: ["20%", "45%"],
+                radius: [53, 65],
+                name: 'pie',
+                type: 'pie',
+                // roseType: 'area',
+                selectedMode: 'single',
+                selectedOffset: 16, //选中是扇区偏移量
+                clockwise: true,
+                startAngle: 90,
+                label: {
+                    normal: {
+                        show: false
+                    }
+                },
+                labelLine: {
+                    normal: {
+                        show: false
+                    }
+                },
+                itemStyle: {
+                    normal: {
+                        borderWidth: 3,
+                        borderColor: '#000',
+                    },
+                    emphasis: {
+                        borderWidth: 0,
+                        shadowBlur: 5,
+                        shadowOffsetX: 0,
+                        shadowColor: 'rgba(0, 0, 0, 0.2)'
+                    }
+                },
+                data: originalData
+            }]
+        };
+        myChartIndustryOption.setOption(tsbmOption);
+        window.onresize = function () {
+            myChartIndustryOption.resize();
+        }
+    }
+
+
+
+</script>
+</html>

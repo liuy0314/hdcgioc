@@ -1,0 +1,312 @@
+<!--
+ * @Description: 
+ * @Version: 2.0
+ * @Autor: Seven
+ * @Date: 2020-09-10 10:24:45
+ * @LastEditors: Seven
+ * @LastEditTime: 2020-10-14 21:11:38
+-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="../css/bootcss/bootstrap.min.css">
+    <link rel="stylesheet" href="../css/style.css">
+    <script src="../js/jquery.min.js"></script>
+    <script src="../js/bootstrap.min.js"></script>
+    <script src="../js/echarts.min.js"></script>
+</head>
+<body>
+      <div>
+        <h2 class="cont-title">
+            各类刑罚的数量分布
+            <!-- <a class="cont-next cont-home" href="../home.html">
+              首页
+            </a>
+            <a class="cont-next cont-pre" href="../index.html">
+                上一页
+            </a>
+            <a class="cont-next" href="./type.html">
+                下一页
+            </a> -->
+        </h2>
+        <div id="echart1" style="width: 100%;height: 400px;"></div>
+      </div>
+      
+</body>
+<script>
+    $(function(){
+        //类罪及其判决数量
+        loadCategroyFault();
+    })
+
+    function loadPersonalFault(){
+      $.ajax({
+              url:"data/penalty_prison_type_num.json",
+              type: "GET", //请求方式为get
+  			      dataType: "json", //返回数据格式为json
+  		        success: function(res)  {
+                var date = []
+                var data = []
+                res.forEach(element => {
+                    date.push(element.name);
+                    data.push(element.number);
+                });
+                var option = {
+                  tooltip: {
+                  trigger: 'axis',
+                  axisPointer: {
+                    type: 'shadow'
+                  },
+                  // formatter: '{b0}<br />{a0}: {c0}亿元<br />{a1}: {c1}%'
+                },
+                grid: {
+                  top: '10%',
+                  right: '3%',
+                  left: '8%',
+                  bottom: '25%'
+                },
+                    xAxis: {
+                        type: 'category',
+                        axisLabel:{
+                            color:"#C4E0F5",
+                            fontSize:14,
+                        },
+                        data: date,
+                        axisLine: {
+                          lineStyle: {
+                            color: 'rgba(255,255,255,0.12)'
+                          }
+                        },
+                        axisLabel: {
+                          margin: 10,
+                          rotate:-10,
+                          color: '#e2e9ff',
+                          textStyle: {
+                            fontSize: 12
+                          },
+                        },
+                    },
+                    yAxis: {
+                        type: 'value',
+                        name:"（个）",
+                        boundaryGap: [0, '100%'],
+                        axisLabel:{
+                            color:"#C4E0F5",
+                            fontSize:14,
+                        },
+                        nameTextStyle:{
+                            color:"#C4E0F5",
+                            fontSize:14,
+                        },
+                        splitLine:{
+                            lineStyle:{
+                                width:1,
+                                type:'dashed',
+                                color:'#A3BEDB',
+                            }
+                        }
+                    },
+                    dataZoom: [{
+                        type: 'inside',
+                        start: 0,
+                        end: 100,
+                       
+                    }, {
+                        start: 0,
+                        end: 100,
+                        handleIcon: 'M10.7,11.9v-1.3H9.3v1.3c-4.9,0.3-8.8,4.4-8.8,9.4c0,5,3.9,9.1,8.8,9.4v1.3h1.3v-1.3c4.9-0.3,8.8-4.4,8.8-9.4C19.5,16.3,15.6,12.2,10.7,11.9z M13.3,24.4H6.7V23h6.6V24.4z M13.3,19.6H6.7v-1.4h6.6V19.6z',
+                        handleSize: '80%',
+                        handleStyle: {
+                            color: '#A3BEDB',
+                        },
+                        textStyle:{
+                            color:'transparent'
+                        },
+                        bottom: '10px'
+                    }],
+                    series: [{
+                        name: '水位',
+                        type: 'bar',
+                        barWidth: '16px',
+                        // smooth: true,
+                        // symbol: 'none',
+                        // sampling: 'average',
+                        itemStyle: {
+                        normal: {
+                          color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
+                            offset: 0,
+                            color: '#4DDEFE' // 0% 处的颜色
+                          }, {
+                            offset: 0.5,
+                            color: '#57FBFA' // 50% 处的颜色
+                          }, {
+                            offset: 1,
+                            color: '#3D8BFF' // 100% 处的颜色
+                          }], false),
+                          barBorderRadius: [2, 2, 0.1, 0.1],
+                          shadowColor: 'rgba(0,0,0,0)',
+                          shadowBlur: 4,
+                          label: {
+                            show: true, //开启显示
+                            position: 'top', //在上方显示
+                            textStyle: { //数值样式
+                              color: '#4DDEFE',
+                              fontSize: 10
+                            }
+                          },
+                        }
+                      },
+                        data: data
+                    }]
+                };
+                var myChart = echarts.init(document.getElementById('echart2'));
+                myChart.clear();
+                myChart.setOption(option);
+                window.onresize = myChart.resize();
+              }
+        })
+    }
+    function loadCategroyFault(){
+        $.ajax({
+                url:"../data/penalty_prison_type_num_0917.json",
+                type: "GET", //请求方式为get
+  			    dataType: "json", //返回数据格式为json
+  		        success: function(data) { //请求成功完成后要执行的方法 
+  				            //each循环 使用$.each方法遍历返回的数据date
+                    loadCategroyFaultChart(data);
+                    var html = ''
+                    data.forEach(element => {
+                      html =  "<li><a>"+element.penaly_class+"</a></li><li role='separator' class='divider'></li>"
+                      $(".dropdown-menu").append(html);
+                      
+                    });
+                    chooseClick();
+  		    	}
+            })
+    }
+    function chooseClick(){
+      $(".dropdown-menu li").each(function(index){
+        $(this).on("click",function(event){
+          console.log("event",event);
+          $("#dropdownMenu1 span").eq(0).html($(this).text());
+            if (!$(this).hasClass("active")){
+                $(".dropdown-menu li").removeClass("active");
+                $(this).addClass("active");
+                loadPersonalFault();
+            }
+        })
+    })
+    }
+ 
+    
+    function loadCategroyFaultChart(data){
+        var xList = [];
+        var yList = [];
+        data.forEach(element => {
+            xList.push(element.name);
+            yList.push(element.number);
+        });
+        var option = {
+        tooltip: {
+          trigger: 'axis',
+          axisPointer: {
+            type: 'shadow'
+          },
+          // formatter: '{b0}<br />{a0}: {c0}亿元<br />{a1}: {c1}%'
+        },
+        grid: {
+          top: '10%',
+          right: '3%',
+          left: '8%',
+          bottom: '15%'
+        },
+        xAxis: [{
+          type: 'category',
+          name: '',
+          nameTextStyle: {
+            color: "#C4E0F5"
+          },
+          data: xList,
+          axisLine: {
+            lineStyle: {
+              color: 'rgba(255,255,255,0.12)'
+            }
+          },
+          axisLabel: {
+            margin: 10,
+            interval:0,
+            color: '#e2e9ff',
+            textStyle: {
+              fontSize: 11
+            },
+          },
+        }],
+        yAxis: [
+          {
+            type: 'value',
+            name: '（个）',
+            nameTextStyle: {
+              color: "#C4E0F5"
+            },
+            axisLabel: {
+              formatter: '{value}',
+              color: '#e2e9ff',
+            },
+            axisLine: {
+              show: true,
+              lineStyle: {
+                color: 'rgba(196,224,245,0.25)'
+              }
+            },
+            splitLine: {
+              show: true,
+              lineStyle: {
+                type: 'dashed',
+                color: 'rgba(196,224,245,0.45)'
+              }
+            }
+          }],
+        series: [{
+          type: 'bar',
+          data: yList,
+          barWidth: '16px',
+          itemStyle: {
+            normal: {
+              color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
+                offset: 0,
+                color: '#4DDEFE' // 0% 处的颜色
+              }, {
+                offset: 0.5,
+                color: '#57FBFA' // 50% 处的颜色
+              }, {
+                offset: 1,
+                color: '#3D8BFF' // 100% 处的颜色
+              }], false),
+              barBorderRadius: [2, 2, 0.1, 0.1],
+              shadowColor: 'rgba(0,0,0,0)',
+              shadowBlur: 4,
+              label: {
+                show: true, //开启显示
+                position: 'top', //在上方显示
+                textStyle: { //数值样式
+                  color: '#4DDEFE',
+                  fontSize: 10
+                }
+              },
+            }
+          },
+
+        }]
+      };
+        var mychart1 = echarts.init(document.getElementById("echart1"));
+        mychart1.clear();
+        mychart1.setOption(option);
+        window.onresize = mychart1.resize();
+    }   
+
+
+</script>
+</html>

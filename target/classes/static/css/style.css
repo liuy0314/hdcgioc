@@ -1,0 +1,90 @@
+body{
+    background: #072958;
+}
+.dropdown, .dropup{
+    z-index: 999;
+}
+.cont-title {
+    width: 100%;
+    height: 44px;
+    line-height: 44px;
+    font-size: 16px;
+    color: #4ddefe;
+    padding-left: 12px;
+    background: url(../image/title.png) no-repeat;
+    width: 420px;
+    background-size: cover;
+}
+.cont-title-sub{
+    width: 95%;
+    height: 44px;
+    line-height: 44px;
+    font-size: 16px;
+    color: #4ddefe;
+    padding-left: 12px;
+    background: url(../image/title.png) no-repeat;
+    background-size: cover;
+}
+.dropdown-menu{
+    max-height: 300px;
+    overflow: auto;
+}
+.cont-next{
+    font-family: PingFangSC-Regular;
+    font-size: 14px;
+    color: #c4e0f5;
+    letter-spacing: 0;
+    padding:0px;
+    width: 120px;
+    text-align: center;
+    background: rgba(19,41,108,.82);
+    border: 1px solid #0055a6;
+    border-radius: 2px;
+    cursor: pointer;
+    position: absolute;
+    right: 30px;
+    top: 20px;
+    display: block;
+}
+.cont-pre{
+    right: 160px;
+}
+.cont-home{
+    right: 290px;
+}
+.cont-next:hover,.cont-pre:hover{
+    color: white;
+    text-decoration-line: none;
+}
+.btn-default{
+    color: #c4e0f5;
+    background: rgba(19,41,108,.82);
+    border: 1px solid #0055a6;
+}
+.age-chart-width{
+    width: 33%;
+}
+a:focus, a:hover{
+    color:#e2e9ff;
+    text-decoration: none;
+}
+.list-group{
+    width: 500px;
+    margin: 0 auto;
+    margin-top: 100px;
+}
+.list-group-item {
+    background: transparent;
+    color: #e2e9ff;
+    height: 58px;
+    border: 1px solid rgb(77, 222, 254);
+}
+.list-group-item span{
+    color: #e2e9ff;
+    font-size: 16px;
+}
+
+a.list-group-item:focus, a.list-group-item:hover, button.list-group-item:focus, button.list-group-item:hover{
+    background-color: rgba(13,35,130,.31); 
+
+}
