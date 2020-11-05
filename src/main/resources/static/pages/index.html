@@ -12,11 +12,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
-    <link rel="stylesheet" href="css/bootcss/bootstrap.min.css">
-    <link rel="stylesheet" href="css/style.css">
-    <script src="js/jquery.min.js"></script>
-    <script src="js/bootstrap.min.js"></script>
-    <script src="js/echarts.min.js"></script>
+    <link rel="stylesheet" href="../css/bootcss/bootstrap.min.css">
+    <link rel="stylesheet" href="../css/style.css">
+    <script src="../js/jquery.min.js"></script>
+    <script src="../js/bootstrap.min.js"></script>
+    <script src="../js/echarts.min.js"></script>
 </head>
 <body>
       <div>
@@ -49,11 +49,22 @@
     $(function(){
         //类罪及其判决数量
         loadCategroyFault();
+        getBaseInfo();
+      
     })
+    function getBaseInfo() {
+        $.ajax({
+            type: "get",
+            url: "../welcome/readingData",
+            success: function (res) {
+                console.log("res----------",res);
 
+            }
+        })
+    }
     function loadPersonalFault(name){
       $.ajax({
-              url:"data/penalty_definite_num_0.json",
+              url:"../data/penalty_definite_num_0.json",
               type: "GET", //请求方式为get
   			      dataType: "json", //返回数据格式为json
   		        success: function(res)  {
@@ -186,7 +197,7 @@
     }
     function loadCategroyFault(){
         $.ajax({
-                url:"data/penalty_class_num.json",
+                url:"../data/penalty_class_num.json",
                 type: "GET", //请求方式为get
   			    dataType: "json", //返回数据格式为json
   		        success: function(data) { //请求成功完成后要执行的方法 
