@@ -10,4 +10,5 @@ import java.util.List;
 public interface WelcomeMapper {
     void saveData(String chinese, String engish, String imgsave, String imgnum);
     List<WelcomeData> readingData();
+    //zhanghonglu
 }
